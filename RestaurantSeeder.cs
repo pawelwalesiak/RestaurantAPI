@@ -37,6 +37,7 @@ namespace RestaurantAPI
                     Description =
                         "KFC (short for Kentucky Fried Chicken) is an American fast food restaurant chain headquartered in Louisville, Kentucky, that specializes in fried chicken.",
                     ContactEmail = "contact@kfc.com",
+                    ContactNumber = "1233412",
                     HasDelivery = true,
                     Dishes = new List<Dish>()
                     {
@@ -44,12 +45,14 @@ namespace RestaurantAPI
                         {
                             Name = "Nashville Hot Chicken",
                             Price = 10.30M,
+                            Description = "text"
                         },
 
                         new Dish()
                         {
                             Name = "Chicken Nuggets",
                             Price = 5.30M,
+                            Description = "text"
                         },
                     },
                     Address = new Address()
@@ -66,6 +69,7 @@ namespace RestaurantAPI
                     Description =
                         "McDonald's Corporation (McDonald's), incorporated on December 21, 1964, operates and franchises McDonald's restaurants.",
                     ContactEmail = "contact@mcdonald.com",
+                    ContactNumber = "1233412",
                     HasDelivery = true,
                     Address = new Address()
                     {
