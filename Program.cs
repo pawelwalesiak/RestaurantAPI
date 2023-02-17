@@ -17,7 +17,7 @@ namespace RestaurantAPI
 
             
 
-            builder.Services.AddTransient<IWeatherForcastService, WeatherForcastService>();
+          //  builder.Services.AddTransient<IWeatherForcastService, WeatherForcastService>();
             builder.Services.AddControllers();
 
             builder.Services.AddScoped<RestaurantSeeder>();
