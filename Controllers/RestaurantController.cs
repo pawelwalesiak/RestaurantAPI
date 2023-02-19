@@ -47,5 +47,22 @@ namespace RestaurantAPI.Controllers
             var restaurnatDtos = _mapper.Map<RestaurantDto>(restaurant);
             return Ok(restaurnatDtos);
         }
+
+        // mapowwanie dto ktore przyjdzie od klineta do encji restauracji z jej adresem a nastepenie dodac ja do db z entity framework
+        [HttpPost]
+        public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var restaurant = _mapper.Map<Restaurant>(dto);
+            _dbContext.Restaurants.Add(restaurant);
+            _dbContext.SaveChanges();
+
+            return Created($"/api/restaurant/{restaurant.Id}", null);
+        }
+
+
     }
 }

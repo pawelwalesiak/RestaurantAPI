@@ -16,6 +16,15 @@ namespace RestaurantAPI
             // mapowanie całej klasy Dish do DishDto
             CreateMap<Dish, DishDto>();
 
+            // wywłanie mapowania mapujemy z CrearteRestaurantDto na Restaurant
+            CreateMap<CreateRestaurantDto, Restaurant>()
+                .ForMember(r => r.Address,
+                    c => c.MapFrom(dto => new Address()
+                        { City = dto.City, PostalCode = dto.PostalCode, Street = dto.Street }));
+
+
+
+
         }
     }
 }
