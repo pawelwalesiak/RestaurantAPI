@@ -1,4 +1,5 @@
 
+using System.Reflection;
 using RestaurantAPI.Entities;
 
 namespace RestaurantAPI
@@ -17,12 +18,14 @@ namespace RestaurantAPI
 
             var conectionstring = builder.Configuration.GetConnectionString("Data Source=.\\;Initial Catalog=RestaurantDb;Integrated Security=True;Trusted_Connection=True;Encrypt=false");
 
-            builder.Services.AddTransient<IWeatherForcastService, WeatherForcastService>();
+          //  builder.Services.AddTransient<IWeatherForcastService, WeatherForcastService>();
             builder.Services.AddControllers();
 
             builder.Services.AddScoped<RestaurantSeeder>();
             builder.Services.AddDbContext<RestaurantDbContext>();
             builder.Services.AddScoped<RestaurantSeeder>();
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
             //recznie utworzyc scope zeby pobrac z kontnenera depdency injection
             
             
