@@ -1,6 +1,7 @@
 
 using System.Reflection;
 using RestaurantAPI.Entities;
+using RestaurantAPI.Services;
 
 namespace RestaurantAPI
 {
@@ -25,6 +26,9 @@ namespace RestaurantAPI
             builder.Services.AddDbContext<RestaurantDbContext>();
             builder.Services.AddScoped<RestaurantSeeder>();
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+           // builder.Services.AddScoped<RestaurantService>();
+            builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+
 
             //recznie utworzyc scope zeby pobrac z kontnenera depdency injection
             
