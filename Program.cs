@@ -3,6 +3,9 @@ using System.Reflection;
 using NLog.Web;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Services;
+using RestaurantAPI.Middleware;
+
+
 
 namespace RestaurantAPI
 {
@@ -28,15 +31,16 @@ namespace RestaurantAPI
             builder.Services.AddDbContext<RestaurantDbContext>();
             builder.Services.AddScoped<RestaurantSeeder>();
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-           // builder.Services.AddScoped<RestaurantService>();
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+            builder.Services.AddScoped<ErrorHandlingMiddleware>();
             
+
 
             //recznie utworzyc scope zeby pobrac z kontnenera depdency injection
             
             
             var app = builder.Build();
-            
+
             
             // Configure the HTTP request pipeline.
 
@@ -44,12 +48,16 @@ namespace RestaurantAPI
            var scope = app.Services.CreateScope();
            var seeder = scope.ServiceProvider.GetRequiredService<RestaurantSeeder>();
 
-          
-            app.UseHttpsRedirection();
-            //app.UseAuthorization();
-            app.MapControllers();
-            app.Run();
-            seeder.Seed();
+           app.UseResponseCaching();
+           app.UseStaticFiles();
+           seeder.Seed();
+           
+           
+           app.UseHttpsRedirection();
+           app.MapControllers();
+           
+           app.Run();
+          // app.UseMiddleware<ErrorHandlingMiddleware>();
 
         }
     }
