@@ -33,6 +33,8 @@ namespace RestaurantAPI
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
+            builder.Services.AddSwaggerGen();
+
             
 
 
@@ -51,13 +53,14 @@ namespace RestaurantAPI
            app.UseResponseCaching();
            app.UseStaticFiles();
            seeder.Seed();
-           
+           app.UseSwagger();
+           app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestaurantAPI"));
            
            app.UseHttpsRedirection();
            app.MapControllers();
            
            app.Run();
-          // app.UseMiddleware<ErrorHandlingMiddleware>();
+           app.UseMiddleware<ErrorHandlingMiddleware>();
 
         }
     }

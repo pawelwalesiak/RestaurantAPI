@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using RestaurantAPI.Exceptions;
 
 
 namespace RestaurantAPI.Middleware;
@@ -23,6 +24,11 @@ public class ErrorHandlingMiddleware : IMiddleware
         {
             await next.Invoke(context);
         }
+        catch (NotFoundException notFoundException)
+        {
+            context.Response.StatusCode = 404;
+            context.Response.WriteAsync(notFoundException.Message);
+        }
         catch (Exception e)
         {
             _logger.LogError(e, e.Message);
@@ -31,4 +37,6 @@ public class ErrorHandlingMiddleware : IMiddleware
         context.Response.StatusCode = 500;
         await context.Response.WriteAsync(("Something went worg..."));
     }
+
+
 }
