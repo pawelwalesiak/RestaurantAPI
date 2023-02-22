@@ -56,9 +56,8 @@ namespace RestaurantAPI
            seeder.Seed();
            app.UseSwagger();
            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestaurantAPI"));
-           app.UseMiddleware<RequestTimeMiddleware>();
-
-            app.UseHttpsRedirection();
+           app.UseMiddleware<RequestTimeMiddleware>(); 
+           app.UseHttpsRedirection();
            app.MapControllers();
            
            app.Run();
