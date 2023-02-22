@@ -21,10 +21,11 @@ namespace RestaurantAPI
             //metoda configure service zalezlonsci kontenea dep 
             //rejestracja zaleznosci dependency innjeciotn w kontenerze
 
+
             builder.Logging.ClearProviders();
             builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
             builder.Host.UseNLog();
-          //  builder.Services.AddTransient<IWeatherForcastService, WeatherForcastService>();
+
             builder.Services.AddControllers();
 
             builder.Services.AddScoped<RestaurantSeeder>();
@@ -50,6 +51,8 @@ namespace RestaurantAPI
            //budowanie scope 
            var scope = app.Services.CreateScope();
            var seeder = scope.ServiceProvider.GetRequiredService<RestaurantSeeder>();
+           seeder.Seed();
+
 
            app.UseResponseCaching();
            app.UseStaticFiles();
