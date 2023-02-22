@@ -1,7 +1,11 @@
 
 using System.Reflection;
+using NLog.Web;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Services;
+using RestaurantAPI.Middleware;
+
+
 
 namespace RestaurantAPI
 {
@@ -17,23 +21,30 @@ namespace RestaurantAPI
             //metoda configure service zalezlonsci kontenea dep 
             //rejestracja zaleznosci dependency innjeciotn w kontenerze
 
-            var conectionstring = builder.Configuration.GetConnectionString("Data Source=.\\;Initial Catalog=RestaurantDb;Integrated Security=True;Trusted_Connection=True;Encrypt=false");
 
-          //  builder.Services.AddTransient<IWeatherForcastService, WeatherForcastService>();
+            builder.Logging.ClearProviders();
+            builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+            builder.Host.UseNLog();
+
             builder.Services.AddControllers();
 
             builder.Services.AddScoped<RestaurantSeeder>();
             builder.Services.AddDbContext<RestaurantDbContext>();
             builder.Services.AddScoped<RestaurantSeeder>();
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-           // builder.Services.AddScoped<RestaurantService>();
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+            builder.Services.AddScoped<ErrorHandlingMiddleware>();
+            builder.Services.AddScoped<RequestTimeMiddleware>();
+            builder.Services.AddSwaggerGen();
+
+            
 
 
             //recznie utworzyc scope zeby pobrac z kontnenera depdency injection
             
             
             var app = builder.Build();
+
             
             // Configure the HTTP request pipeline.
 
@@ -42,11 +53,19 @@ namespace RestaurantAPI
            var seeder = scope.ServiceProvider.GetRequiredService<RestaurantSeeder>();
            seeder.Seed();
 
-            app.UseHttpsRedirection();
-            //app.UseAuthorization();
-            app.MapControllers();
-            app.Run();
-            
+
+           app.UseResponseCaching();
+           app.UseStaticFiles();
+           seeder.Seed();
+           app.UseSwagger();
+           app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestaurantAPI"));
+           app.UseMiddleware<RequestTimeMiddleware>(); 
+           app.UseHttpsRedirection();
+           app.MapControllers();
+           
+           app.Run();
+           app.UseMiddleware<ErrorHandlingMiddleware>();
+          // app.UseMiddleware<RequestTimeMiddleware>();
 
         }
     }
