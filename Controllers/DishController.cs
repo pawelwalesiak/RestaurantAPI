@@ -4,22 +4,22 @@ using RestaurantAPI.Services;
 
 namespace RestaurantAPI.Controllers
 {
-    [Route("api/{restaurantId}/dish")]
+    [Route("api/restaurant/{restaurantId}/dish")]
     [ApiController]
     //walidajcja modeli dla kazdej z akcji 
     public class DishController : ControllerBase
     {
-        private readonly IDishService _disService;
+        private readonly IDishService _dishService;
 
         public DishController(IDishService dishService)
         {
-                _disService = dishService;
+                _dishService = dishService;
 
         }
         [HttpPost]
-        public ActionResult Post([FromRoute] int restaurantId, CreateDishDto dto)
+        public ActionResult Post([FromRoute] int restaurantId,[FromBody] CreateDishDto dto)
         {
-            var newDishId = _disService.Create(restaurantId, dto);
+            var newDishId = _dishService.Create(restaurantId, dto);
             return Created($"api/{restaurantId}/dish/{newDishId}", null);
         }
     }

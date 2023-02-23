@@ -13,7 +13,7 @@ namespace RestaurantAPI.Entities
 
         public DbSet<Restaurant> Restaurants { get; set; } 
         public DbSet<Address> Addresses { get; set; }
-        public  DbSet<DishDto> Dishes { get; set; }
+        public  DbSet<Dish> Dishes { get; set; }
 
         // wymagane dane - dodatkowa konfiguracja nadpisana w metodzie on model creating 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
