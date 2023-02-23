@@ -22,6 +22,7 @@ namespace RestaurantAPI
                     c => c.MapFrom(dto => new Address()
                         { City = dto.City, PostalCode = dto.PostalCode, Street = dto.Street }));
 
+            CreateMap<CreateDishDto, Dish>();
 
 
 
