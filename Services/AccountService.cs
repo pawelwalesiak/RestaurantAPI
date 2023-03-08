@@ -24,6 +24,7 @@ namespace RestaurantAPI.Services
         }
         public void RegisterUser (RegisterUserDto dto) 
         {
+           
             var newUser = new User()
             {
                 FirstName = dto.FirstName,

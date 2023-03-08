@@ -7,11 +7,16 @@ using RestaurantAPI.Middleware;
 using Microsoft.Identity.Client;
 using static RestaurantAPI.Services.AccountService;
 using Microsoft.AspNetCore.Identity;
+using FluentValidation;
+using RestaurantAPI.Models;
+using RestaurantAPI.Models.Validators;
+using FluentValidation.AspNetCore;
 
 namespace RestaurantAPI
 {
     public class Program
     {
+        
         public static void Main(string[] args)
         {
             //utowrzenie webhosta
@@ -27,7 +32,7 @@ namespace RestaurantAPI
             builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
             builder.Host.UseNLog();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddFluentValidation();
 
             builder.Services.AddScoped<RestaurantSeeder>();
             builder.Services.AddDbContext<RestaurantDbContext>();
@@ -38,6 +43,7 @@ namespace RestaurantAPI
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
             builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserValidator>();
             builder.Services.AddScoped<RequestTimeMiddleware>();
             builder.Services.AddSwaggerGen();
 
