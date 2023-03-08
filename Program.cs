@@ -4,8 +4,8 @@ using NLog.Web;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Services;
 using RestaurantAPI.Middleware;
-
-
+using Microsoft.Identity.Client;
+using static RestaurantAPI.Services.AccountService;
 
 namespace RestaurantAPI
 {
@@ -34,6 +34,7 @@ namespace RestaurantAPI
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
             builder.Services.AddScoped<IDishService, DishService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
             builder.Services.AddScoped<RequestTimeMiddleware>();
             builder.Services.AddSwaggerGen();
