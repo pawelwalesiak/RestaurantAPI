@@ -1,4 +1,5 @@
-﻿using RestaurantAPI.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using RestaurantAPI.Entities;
 using RestaurantAPI.Models;
 using RestaurantAPI.Pages;
 using System.ComponentModel.DataAnnotations;
@@ -14,9 +15,12 @@ namespace RestaurantAPI.Services
        
 
         private readonly  RestaurantDbContext _context;
-        public AccountService(RestaurantDbContext context)
+        private readonly IPasswordHasher<User> _passwordHasher;
+
+        public AccountService(RestaurantDbContext context, IPasswordHasher<User> passwordHasher)
         {
             _context = context;
+            _passwordHasher = passwordHasher;
         }
         public void RegisterUser (RegisterUserDto dto) 
         {
@@ -29,7 +33,8 @@ namespace RestaurantAPI.Services
                 RoleId = dto.RoleId
 
             };
-
+            var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);
+            newUser.PasswordHash = hashedPassword;
             _context.Users.Add(newUser);
             _context.SaveChanges();
         }

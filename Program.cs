@@ -6,6 +6,7 @@ using RestaurantAPI.Services;
 using RestaurantAPI.Middleware;
 using Microsoft.Identity.Client;
 using static RestaurantAPI.Services.AccountService;
+using Microsoft.AspNetCore.Identity;
 
 namespace RestaurantAPI
 {
@@ -36,6 +37,7 @@ namespace RestaurantAPI
             builder.Services.AddScoped<IDishService, DishService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             builder.Services.AddScoped<RequestTimeMiddleware>();
             builder.Services.AddSwaggerGen();
 
