@@ -11,6 +11,8 @@ using FluentValidation;
 using RestaurantAPI.Models;
 using RestaurantAPI.Models.Validators;
 using FluentValidation.AspNetCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace RestaurantAPI
 {
@@ -22,18 +24,37 @@ namespace RestaurantAPI
             //utowrzenie webhosta
             //zostaje
             var builder = WebApplication.CreateBuilder(args);
-            
+
             // Add services to the container.
             //metoda configure service zalezlonsci kontenea dep 
             //rejestracja zaleznosci dependency innjeciotn w kontenerze
 
+            var authenticationSettigns = new AuthenticationSettings();
+
+            
+            builder.Configuration.GetSection("Authentication").Bind(authenticationSettigns);
+            builder.Services.AddSingleton(authenticationSettigns);
+            builder.Services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = "Bearer";
+                option.DefaultScheme = "Bearer";
+                option.DefaultChallengeScheme = "Bearer";
+            }).AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+                cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidIssuer = authenticationSettigns.JwtIssuer,
+                    ValidAudience = authenticationSettigns.JwtIssuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettigns.JwtKey)),
+                };
+            });
 
             builder.Logging.ClearProviders();
             builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
             builder.Host.UseNLog();
-
             builder.Services.AddControllers().AddFluentValidation();
-
             builder.Services.AddScoped<RestaurantSeeder>();
             builder.Services.AddDbContext<RestaurantDbContext>();
             builder.Services.AddScoped<RestaurantSeeder>();
@@ -69,7 +90,8 @@ namespace RestaurantAPI
            seeder.Seed();
            app.UseSwagger();
            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestaurantAPI"));
-           app.UseMiddleware<RequestTimeMiddleware>(); 
+           app.UseMiddleware<RequestTimeMiddleware>();
+           app.UseAuthentication();
            app.UseHttpsRedirection();
            app.MapControllers();
            
