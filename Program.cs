@@ -30,8 +30,10 @@ namespace RestaurantAPI
             //rejestracja zaleznosci dependency innjeciotn w kontenerze
 
             var authenticationSettigns = new AuthenticationSettings();
+
             
             builder.Configuration.GetSection("Authentication").Bind(authenticationSettigns);
+            builder.Services.AddSingleton(authenticationSettigns);
             builder.Services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = "Bearer";
@@ -89,7 +91,7 @@ namespace RestaurantAPI
            app.UseSwagger();
            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestaurantAPI"));
            app.UseMiddleware<RequestTimeMiddleware>();
-            app.UseAuthentication();
+           app.UseAuthentication();
            app.UseHttpsRedirection();
            app.MapControllers();
            
