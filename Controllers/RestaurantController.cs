@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
@@ -10,6 +11,7 @@ namespace RestaurantAPI.Controllers
 {
     [Route("api/restaurant")]
     [ApiController]
+    [Authorize]
 
     /*if (!ModelState.IsValid)
     {
@@ -27,6 +29,8 @@ public class RestaurantController : ControllerBase
             _restaurantService=restaurantService;
         }
         [HttpGet]
+        [Authorize]
+        //autoryzacja
         public ActionResult <IEnumerable<RestaurantDto>> GetAll()
         {
            var restaurantsDtos = _restaurantService.GetAll();
@@ -35,6 +39,7 @@ public class RestaurantController : ControllerBase
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous] //bedzie mozna dokonac akcji bez nagłowka autoryzacji bez bearer token
         public ActionResult<RestaurantDto> Get([FromRoute] int id)
         {
             var restaurant = _restaurantService.GetById(id);
