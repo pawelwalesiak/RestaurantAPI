@@ -82,12 +82,15 @@ namespace RestaurantAPI
            //budowanie scope 
            var scope = app.Services.CreateScope();
            var seeder = scope.ServiceProvider.GetRequiredService<RestaurantSeeder>();
-           seeder.Seed();
+          
+            
+            seeder.Seed();
 
 
            app.UseResponseCaching();
            app.UseStaticFiles();
-           seeder.Seed();
+          
+            seeder.Seed();
            app.UseSwagger();
            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestaurantAPI"));
            app.UseMiddleware<RequestTimeMiddleware>();
@@ -98,9 +101,14 @@ namespace RestaurantAPI
            app.UseRouting();
            
            app.UseAuthorization();
-           
-           app.Run();
-           app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            }
+            );
+
+          app.Run();
+          app.UseMiddleware<ErrorHandlingMiddleware>();
           // app.UseMiddleware<RequestTimeMiddleware>();
 
         }

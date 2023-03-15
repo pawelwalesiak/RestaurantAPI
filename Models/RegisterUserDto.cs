@@ -13,7 +13,7 @@ namespace RestaurantAPI.Models
         public string Nationality { get; set; }
         public DateTime? DateOfBirth { get; set; }
 
-        // id danej roli dla uzytkownika , domysle uzytkonik bedzie w roli user 
+        // id danej roli dla uzytkownika , domysle uzytkonik bedzie w roli user  = 1 admin
         public int RoleId { get; set; } = 1;
     }
 }

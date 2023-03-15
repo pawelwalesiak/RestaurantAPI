@@ -40,6 +40,7 @@ public class RestaurantController : ControllerBase
 
         [HttpGet("{id}")]
         [AllowAnonymous] //bedzie mozna dokonac akcji bez nagłowka autoryzacji bez bearer token
+
         public ActionResult<RestaurantDto> Get([FromRoute] int id)
         {
             var restaurant = _restaurantService.GetById(id);
@@ -50,6 +51,12 @@ public class RestaurantController : ControllerBase
 
         // mapowwanie dto ktore przyjdzie od klineta do encji restauracji z jej adresem a nastepenie dodac ja do db z entity framework
         [HttpPost]
+
+      
+      //  [Authorize(Roles = "Admin,Manager")]
+        //ma wiekszy prioryten niz atrybut [Authorizne nałożony na kontroller]
+        //dostęp dla użytkownikó o roli admin i manager
+        //w tokienie musi byc informacja o roli 
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
           
