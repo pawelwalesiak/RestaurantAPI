@@ -28,9 +28,10 @@ public class RestaurantController : ControllerBase
         {
             _restaurantService=restaurantService;
         }
+
         [HttpGet]
-        [Authorize(Policy = "Atleast20")]
-        //autoryzacja
+      //  [Authorize(Policy = "Atleast20")]
+        //autoryzacja polityki atleast20
         public ActionResult <IEnumerable<RestaurantDto>> GetAll()
         {
            var restaurantsDtos = _restaurantService.GetAll();
