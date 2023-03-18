@@ -54,24 +54,21 @@ public class RestaurantController : ControllerBase
         // mapowwanie dto ktore przyjdzie od klineta do encji restauracji z jej adresem a nastepenie dodac ja do db z entity framework
         [HttpPost]
 
-      
+        [AllowAnonymous]
         //[Authorize(Roles = "Admin,Manager")]
         //ma wiekszy prioryten niz atrybut [Authorizne nałożony na kontroller]
         //dostęp dla użytkownikó o roli admin i manager
         //w tokienie musi byc informacja o roli 
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
-            int userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
-
-            var id = _restaurantService.Create(dto, userId);
+            var id = _restaurantService.Create(dto);
             
             return Created($"/api/restaurant/{id}", null);
         }
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            _restaurantService.Delete(id, User);
+            _restaurantService.Delete(id);
           
 
            return NotFound();
@@ -83,7 +80,7 @@ public class RestaurantController : ControllerBase
         {
            
 
-             _restaurantService.Update(id, dto, User);
+             _restaurantService.Update(id, dto);
            
 
             return Ok();
