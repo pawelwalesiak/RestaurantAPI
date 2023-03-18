@@ -31,11 +31,12 @@ public class RestaurantController : ControllerBase
         }
 
         [HttpGet]
-      //  [Authorize(Policy = "Atleast20")]
+        [AllowAnonymous]
+        //[Authorize(Policy = "Atleast20")]
         //autoryzacja polityki atleast20
-        public ActionResult <IEnumerable<RestaurantDto>> GetAll()
+        public ActionResult <IEnumerable<RestaurantDto>> GetAll([FromQuery] string searchPhrase)
         {
-           var restaurantsDtos = _restaurantService.GetAll();
+           var restaurantsDtos = _restaurantService.GetAll(searchPhrase);
 
             return Ok(restaurantsDtos);
         }
@@ -54,7 +55,7 @@ public class RestaurantController : ControllerBase
         // mapowwanie dto ktore przyjdzie od klineta do encji restauracji z jej adresem a nastepenie dodac ja do db z entity framework
         [HttpPost]
 
-        [AllowAnonymous]
+       
         //[Authorize(Roles = "Admin,Manager")]
         //ma wiekszy prioryten niz atrybut [Authorizne nałożony na kontroller]
         //dostęp dla użytkownikó o roli admin i manager
