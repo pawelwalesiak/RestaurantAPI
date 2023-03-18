@@ -22,7 +22,9 @@ namespace RestaurantAPI.Services
         }
 
         public ClaimsPrincipal User => _httpContextAccessor.HttpContext?.User;
+      
+        public int? GetUserId => User?.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value is null ? null : int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-        public int? GetUserId => User is null ? null : int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+       //  public int? GetUserId => User is null ? null : int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
     }
 }
