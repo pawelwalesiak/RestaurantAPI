@@ -29,7 +29,7 @@ public class RestaurantController : ControllerBase
             _restaurantService=restaurantService;
         }
         [HttpGet]
-        [Authorize]
+        [Authorize(Policy = "Atleast20")]
         //autoryzacja
         public ActionResult <IEnumerable<RestaurantDto>> GetAll()
         {
@@ -53,7 +53,7 @@ public class RestaurantController : ControllerBase
         [HttpPost]
 
       
-      //  [Authorize(Roles = "Admin,Manager")]
+        //[Authorize(Roles = "Admin,Manager")]
         //ma wiekszy prioryten niz atrybut [Authorizne nałożony na kontroller]
         //dostęp dla użytkownikó o roli admin i manager
         //w tokienie musi byc informacja o roli 
