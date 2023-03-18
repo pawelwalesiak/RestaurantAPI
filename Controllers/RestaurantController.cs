@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Models;
 using RestaurantAPI.Services;
+using System.Security.Claims;
 using System.Security.Cryptography;
 
 namespace RestaurantAPI.Controllers
@@ -60,17 +61,17 @@ public class RestaurantController : ControllerBase
         //w tokienie musi byc informacja o roli 
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
-          
-           
+            int userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-            var id = _restaurantService.Create(dto);
-            _restaurantService.Create(dto);
+
+            var id = _restaurantService.Create(dto, userId);
+            
             return Created($"/api/restaurant/{id}", null);
         }
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            _restaurantService.Delete(id);
+            _restaurantService.Delete(id, User);
           
 
            return NotFound();
@@ -82,7 +83,7 @@ public class RestaurantController : ControllerBase
         {
            
 
-             _restaurantService.Update(id, dto);
+             _restaurantService.Update(id, dto, User);
            
 
             return Ok();
