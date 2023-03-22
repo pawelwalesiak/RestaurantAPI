@@ -12,7 +12,7 @@ namespace RestaurantAPI.Services
     public interface IRestaurantService
     {
         RestaurantDto GetById(int id);
-        IEnumerable<RestaurantDto> GetAll(string searchPhrase);
+        PagedResult<RestaurantDto> GetAll(RestaurantQuery query);
         int Create(CreateRestaurantDto dto);
         void Delete(int id);
         void Update(int id, UpdateRestaurantDto dto);
@@ -49,17 +49,28 @@ namespace RestaurantAPI.Services
 
         }
 
-        public IEnumerable<RestaurantDto> GetAll(string searchPhrase)
+        public PagedResult<RestaurantDto> GetAll(RestaurantQuery query)
         {
-            var restaurants = _dbContext
+
+            var baseQuery = _dbContext
                 .Restaurants
                 .Include(r => r.Address)
                 .Include(r => r.Dishes)
-                .Where( r => searchPhrase == null || ( r.Name.ToLower().Contains(searchPhrase.ToLower())))
+                .Where(r => query.SearchPhrase == null || (r.Name.ToLower().Contains(query.SearchPhrase.ToLower())));
 
+
+            var restaurants = baseQuery
+                .Skip(query.PageSize*(query.PageNumber-1))
+                .Take(query.PageSize)
                 .ToList();
+
+
+            var totalItemsCount = baseQuery.Count();
+
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
-            return restaurantsDtos;
+
+            var result = new PagedResult<RestaurantDto>(restaurantsDtos, totalItemsCount ,query.PageNumber, query.PageSize);
+            return result;
         }
 
         public int Create(CreateRestaurantDto dto)
