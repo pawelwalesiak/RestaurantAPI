@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
+using RestaurantAPI.Entities;
 
 namespace RestaurantAPI.Models.Validators
 {
     public class RestaurantQueryValidator : AbstractValidator<RestaurantQuery>
     {
         private int[] allowedPageSizes = new[] { 5, 10, 15 };
+        private string[] allowedSortByColumnNames = {nameof(Restaurant.Name), nameof(Restaurant.Category), nameof(Restaurant.Description),};
 
         public RestaurantQueryValidator()
         {
@@ -18,6 +20,11 @@ namespace RestaurantAPI.Models.Validators
                 }
             
             });
+
+            RuleFor(r => r.SortBy)
+            .Must(value => string.IsNullOrEmpty(value) || allowedSortByColumnNames.Contains(value))
+            .WithMessage($"Sort by is optional or must be in {string.Join(",", allowedSortByColumnNames)} ");
+
         }
     }
 }
