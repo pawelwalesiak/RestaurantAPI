@@ -6,7 +6,7 @@ namespace RestaurantAPI.Controllers
 {
 
     [Route("file")]
-    [Authorize]
+  //  [Authorize]
     public class FileController : ControllerBase
     {
         public ActionResult GetFile([FromQuery] string fileName) 
@@ -32,6 +32,7 @@ namespace RestaurantAPI.Controllers
 
         }
         [HttpPost]
+      //  [ResponseCache(Duration =1200,VaryByQueryKeys = new[]{"fileName" })]
         public ActionResult Upload ([FromForm] IFormFile file) 
         {
         if (file != null && file.Length > 0 ) 

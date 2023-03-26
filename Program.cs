@@ -115,7 +115,7 @@ namespace RestaurantAPI
           
             
             seeder.Seed();
-
+        //   app.UseResponseCaching();
            app.UseStaticFiles();
 
            app.UseCors("FrontendClient");
