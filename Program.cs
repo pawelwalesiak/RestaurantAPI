@@ -89,6 +89,14 @@ namespace RestaurantAPI
             builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddSwaggerGen();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("FrontendClient", builder => 
+                         builder.AllowAnyMethod()
+                                .AllowAnyMethod()
+                                .WithOrigins("http://localhost:8080"));
+            }
+            );
 
             
 
@@ -107,8 +115,10 @@ namespace RestaurantAPI
           
             
             seeder.Seed();
+        //   app.UseResponseCaching();
+           app.UseStaticFiles();
 
-
+           app.UseCors("FrontendClient");
            app.UseResponseCaching();
            app.UseStaticFiles();
           
