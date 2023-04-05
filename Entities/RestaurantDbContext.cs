@@ -5,11 +5,16 @@ namespace RestaurantAPI.Entities
 {
     public class RestaurantDbContext : DbContext
     {
-        private string _connectionString = "Data Source=.\\;Initial Catalog=RestaurantDb;Integrated Security=True;Trusted_Connection=True;Encrypt=false";
+        //   private string _connectionString = "Data Source=.\\;Initial Catalog=RestaurantDb;Integrated Security=True;Trusted_Connection=True;Encrypt=false";
         //Data Source=.\;Initial Catalog=RestaurantDb;Integrated Security=True
         //kontekst bazy danych 
         //odwzorwoanie klas na tabele 
         //publiczne wlasnicwosci ktore jak ogeneryczny parametr przyjmuja typk ktory bedzie prezentowqac dana tabele 
+
+        public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options)
+        {
+            
+        }
 
         public DbSet<Restaurant> Restaurants { get; set; } 
         public DbSet<Address> Addresses { get; set; }
@@ -48,10 +53,10 @@ namespace RestaurantAPI.Entities
                 .HasMaxLength(50);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_connectionString);
+      //  protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+      //  {
+      //      optionsBuilder.UseSqlServer(_connectionString);
 
-        }
+      // }
     }
 }

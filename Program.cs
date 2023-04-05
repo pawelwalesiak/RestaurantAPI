@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using RestaurantAPI.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace RestaurantAPI
 {
@@ -74,7 +75,7 @@ namespace RestaurantAPI
 
 
             builder.Services.AddScoped<RestaurantSeeder>();
-            builder.Services.AddDbContext<RestaurantDbContext>();
+         
             builder.Services.AddScoped<RestaurantSeeder>();
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
@@ -98,51 +99,52 @@ namespace RestaurantAPI
             }
             );
 
-            
+            builder.Services.AddDbContext<RestaurantDbContext>
+                (options => options.UseSqlServer(builder.Configuration.GetConnectionString("RestaurantDbConnection")));
+
 
 
             //recznie utworzyc scope zeby pobrac z kontnenera depdency injection
-            
-            
+
             var app = builder.Build();
 
-            
-            // Configure the HTTP request pipeline.
 
-           //budowanie scope 
-           var scope = app.Services.CreateScope();
-           var seeder = scope.ServiceProvider.GetRequiredService<RestaurantSeeder>();
-          
-            
-            seeder.Seed();
-        //   app.UseResponseCaching();
-           app.UseStaticFiles();
+            //budowanie scope 
+            var scope = app.Services.CreateScope();
+            var seeder = scope.ServiceProvider.GetRequiredService<RestaurantSeeder>();
 
-           app.UseCors("FrontendClient");
-           app.UseResponseCaching();
-           app.UseStaticFiles();
-          
+            app.UseResponseCaching();
+            app.UseStaticFiles();
+            app.UseCors("FrontendClient");
+            
+
             seeder.Seed();
-           app.UseSwagger();
-           app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestaurantAPI"));
-           app.UseMiddleware<RequestTimeMiddleware>();
-           app.UseAuthentication();
-           app.UseHttpsRedirection();
-           app.MapControllers();
-           
-           app.UseRouting();
-           
-           app.UseAuthorization();
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+          //  app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<RequestTimeMiddleware>();
+
+            app.UseAuthentication();
+            app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestaurantAPI"));
+           // app.MapControllers();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             }
             );
 
-          app.Run();
-          app.UseMiddleware<ErrorHandlingMiddleware>();
-          // app.UseMiddleware<RequestTimeMiddleware>();
-
+            app.Run();
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+            // app.UseMiddleware<RequestTimeMiddleware>();
         }
     }
 }
